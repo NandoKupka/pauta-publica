@@ -1,8 +1,29 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {stageSummary,kindGuide,decisionFor,milestoneTitle} from '../reading.mjs';
+import {stageSummary,kindGuide,decisionFor,milestoneTitle,nextGuidance,effectContext} from '../reading.mjs';
+import {explanationFor} from '../explanations.mjs';
+import {readFileSync} from 'node:fs';
 import {render} from '../view.mjs';
 const now=new Date('2026-11-03T12:00:00Z');
+
+test('próximos passos respeitam a etapa atual e não inventam uma votação futura',()=>{
+ const p=status=>({provider:'camara',kind:'PL',details:{status}});
+ assert.match(nextGuidance(p('Aguardando Apreciação pelo Senado Federal'),{org:'camara'}).action,/Senado/);
+ assert.match(nextGuidance(p('Transformado em Norma Jurídica'),{}).action,/publicação da norma/);
+ assert.match(nextGuidance(p('Arquivada'),{}).action,/arquivamento/);
+ assert.match(nextGuidance(p('Estado desconhecido')).watch,/não permite identificar/);
+ assert.match(nextGuidance({kind:'REQ'},{}).watch,/pedido/);
+ assert.match(nextGuidance({provider:'stf'},{}).watch,/adiado/);
+ assert.match(effectContext({kind:'MPV'}),/antes da conclusão/);
+ assert.match(effectContext({kind:'REQ'}),/Não aprova automaticamente/);
+});
+
+test('novo resumo e público afetado deixam de aparecer quando a ementa muda',()=>{
+ const s=JSON.parse(readFileSync(new URL('../data/snapshot.json',import.meta.url),'utf8'));
+ const p=s.pautas['camara-2602554'];
+ assert.match(explanationFor(p).affected,/vendedores/);
+ assert.equal(explanationFor({...p,details:{...p.details,summary:'Texto substituído'}}),null);
+});
 
 test('linguagem simples conserva o significado e a incerteza do registro oficial',()=>{
  const pauta=status=>({provider:'camara',kind:'PL',details:{status}});

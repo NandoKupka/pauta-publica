@@ -38,6 +38,34 @@ export function decisionFor(p,next) {
   return nextStage(p)?.who||(next?.org==='camara'&&next.body?next.body:next?.decisionMaker)||d.decisionBody||'Colegiado ainda não identificado nesta coleta';
 }
 
+export function nextGuidance(p,next) {
+  const status=normalize(p.details?.status),kind=p.details?.kind||p.kind;
+  if(/transformad[oa] em norma/.test(status))return {action:'Conferir a publicação da norma',watch:'Procure o texto publicado e a data de início de vigência. A situação do projeto, sozinha, não informa quando cada regra começa a valer.',basis:'Situação oficial'};
+  if(/^arquivad[oa]$/.test(status))return {action:'Conferir o motivo do arquivamento',watch:'O histórico oficial informa o motivo e eventuais atos posteriores. Não há continuação automática indicada por esse estado.',basis:'Situação oficial'};
+  if(/aguardando apreciacao pelo senado/.test(status))return {action:'Acompanhar o recebimento e a análise no Senado',watch:'Procure a distribuição da matéria e os próximos atos na casa revisora. Uma sessão antiga da Câmara não confirma uma data de votação no Senado.',basis:'Situação oficial'};
+  if(/aguardando sancao/.test(status))return {action:'Acompanhar a manifestação da Presidência',watch:'Procure o ato de sanção ou veto e a publicação correspondente. Ainda não é possível afirmar a vigência apenas com esse andamento.',basis:'Situação oficial'};
+  if(/aguardando designacao de relator/.test(status))return {action:'Aguardar a escolha de quem fará a relatoria',watch:'O próximo registro a procurar é a designação do relator. Depois, acompanhe a apresentação de sua análise.',basis:'Situação oficial'};
+  if(/aguardando parecer/.test(status))return {action:'Acompanhar a apresentação do parecer',watch:'O parecer expõe a recomendação do relator e pode sugerir mudanças. Confira depois o que o colegiado efetivamente decidiu.',basis:'Situação oficial'};
+  if(p.provider==='stf')return {action:next?'Acompanhar a sessão e o resultado publicado':'Verificar nova pauta ou andamento do processo',watch:'Procure a ata e a decisão publicada. O julgamento pode ser adiado, suspenso ou continuar em outra sessão; o efeito depende do resultado oficial.',basis:next?'Sessão encontrada na agenda':'Orientação de acompanhamento'};
+  if(next||/aguardando deliberacao|pronta para pauta|incluida em ordem do dia/.test(status))return {
+    action:next?'Acompanhar a apreciação na sessão indicada':'Conferir a inclusão em uma sessão',
+    watch:/^(REQ|RQS|RQN|RIC)$/.test(kind)?'Confira se o pedido foi aprovado e quais providências foram registradas para executá-lo. A aprovação se refere ao pedido descrito, não à adoção automática de uma política pública.':reportKinds.has(kind)?'Confira a decisão sobre o parecer e o encaminhamento da proposta principal. A recomendação do documento não substitui a decisão do colegiado.':'Confira o resultado do ato votado e o encaminhamento registrado depois da sessão. Pode haver emendas, adiamento ou análise de apenas uma etapa.',
+    basis:next?'Sessão encontrada na agenda':'Situação oficial'
+  };
+  return {action:'Consultar o próximo andamento oficial',watch:'A coleta ainda não permite identificar um próximo ato específico. Consulte a ficha oficial; a ausência de data aqui não significa que a tramitação parou.',basis:'Etapa ainda não identificada'};
+}
+
+export function effectContext(p) {
+  const status=normalize(p.details?.status),kind=p.details?.kind||p.kind;
+  if(/transformad[oa] em norma/.test(status))return 'A fonte registra transformação em norma. Consulte o texto publicado para conferir o alcance e a vigência.';
+  if(/^arquivad[oa]$/.test(status))return 'A fonte registra arquivamento. O objetivo descrito não representa uma mudança em vigor.';
+  if(p.provider==='stf')return 'O resumo descreve a questão em análise. A decisão publicada é que define o resultado e seus efeitos.';
+  if(kind==='MPV')return 'Medidas provisórias podem produzir efeitos antes da conclusão da análise legislativa. Confira a vigência na fonte oficial.';
+  if(/^(REQ|RQS|RQN|RIC)$/.test(kind))return 'A aprovação vale para o pedido descrito. Não aprova automaticamente uma lei ou a política discutida na audiência.';
+  if(reportKinds.has(kind))return 'O parecer recomenda um caminho. Ele não comprova a aprovação final da proposta.';
+  return 'Este é o efeito proposto pelo texto. A presença na agenda ou a aprovação de uma etapa não comprova que a mudança já está valendo.';
+}
+
 export function milestoneTitle(item) {
   const titles={
     'Apresentação de Proposição':'Proposta apresentada',

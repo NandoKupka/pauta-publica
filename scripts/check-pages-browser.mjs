@@ -42,6 +42,12 @@ try{
   const search=await details.$('.ballot-search input');
   if(search){await search.type('nome que não existe');assert.equal(await details.$$eval('tbody tr:not([hidden])',nodes=>nodes.length),0);}
   await page.goto(base+'pauta/camara-2355754/');assert.ok(await page.$('.related-documents'));
+  await page.goto(base+'pauta/camara-2602554/');
+  assert.match(await page.$eval('.impact-audience',n=>n.textContent),/vendedores/);
+  assert.match(await page.$eval('.effect-context',n=>n.textContent),/efeito proposto/);
+  assert.ok(await page.$('#proximos .next-guidance .text-source'));
+  await page.click('.position-action a');
+  assert.equal(new URL(page.url()).hash,'#proximos');
   await page.goto(base+'pauta/camara-2333814/');
   assert.match(await page.$eval('h1',node=>node.textContent),/Auxílio a responsáveis/);
   assert.ok(await page.$('.reading-intro .reading-lead'));

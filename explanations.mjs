@@ -2,6 +2,152 @@
 import { createHash } from 'node:crypto';
 const explanations = {
 
+  "camara-2643435": {
+    "title": "Recursos extraordinários para desenvolvimento agrário e assistência social",
+    "text": "A medida provisória prevê a abertura de cerca de R$ 925 milhões para os ministérios responsáveis pelo desenvolvimento agrário e pela assistência social. A destinação detalhada está no texto e nos anexos. Por ser uma MP, sua vigência deve ser conferida na publicação oficial.",
+    "affected": "Órgãos e ações atendidos pelos recursos previstos na medida.",
+    "fingerprint": "a92c5a82a1f5d5efb2ff73df56d64848a4b7daed1dfccf45f55a0979fc3466e1"
+  },
+  "camara-2642560": {
+    "title": "Convidado para debate sobre orçamento da reciclagem",
+    "text": "O requerimento pede a inclusão de um convidado em uma audiência sobre recursos para políticas de reciclagem no orçamento de 2027. Aprovar esse convite não destina dinheiro à atividade.",
+    "affected": "Participantes da audiência e pessoas ligadas à reciclagem.",
+    "fingerprint": "cfc07caf3e710955a23e6eb18f4f6ccadfb831a644f7671c6a0df37b203c9103"
+  },
+  "camara-2642836": {
+    "title": "Debate sobre recursos para proteção de cães e gatos",
+    "text": "O pedido é para realizar uma audiência sobre financiamento do ProPatinhas e fortalecimento do SinPatinhas no orçamento de 2027. A aprovação permite avançar na organização do debate; não aprova por si só verbas para os programas.",
+    "affected": "Gestores dos programas e pessoas que atuam na proteção animal.",
+    "fingerprint": "9a3a83de9a748e8470558ba0711878f2253eae1c24d6021d4a0a8ff6e23bfa43"
+  },
+  "camara-2645514": {
+    "title": "Debate sobre orçamento das agências reguladoras",
+    "text": "O requerimento pede uma audiência sobre os recursos das agências reguladoras e os efeitos dos bloqueios orçamentários em suas atividades. O debate pode orientar a discussão do orçamento de 2027, mas o pedido não altera o orçamento.",
+    "affected": "Agências reguladoras e participantes do debate orçamentário.",
+    "fingerprint": "dd9f910c273ab7b32e600ed659c0408377bc41821aa6087368e1f25a773ea28b"
+  },
+  "camara-2596596": {
+    "title": "Destino das contribuições dos setores aéreo e portuário",
+    "text": "A proposta muda regras sobre a destinação de contribuições sociais obrigatórias das empresas dos setores aéreo e portuário, incluindo as relativas ao trabalhador portuário avulso. A ementa não detalha como os recursos seriam repartidos.",
+    "affected": "Empresas desses setores e instituições destinatárias das contribuições.",
+    "fingerprint": "71f6927c36aab2783c3965578cc5120e5952344cb3e38342548abd6228877435"
+  },
+  "camara-2531613": {
+    "title": "Dia Nacional da Consolidação da Independência",
+    "text": "A proposta cria uma data no calendário nacional dedicada à consolidação da Independência do Brasil. A ementa descreve a instituição da data; não informa a criação de um feriado.",
+    "affected": "Instituições e pessoas envolvidas em atividades de memória e celebração da Independência.",
+    "fingerprint": "9ae3bcebe64ac8f809a07b68d92ae3e9fa11e39c1de5173120c9f90b13ba5e67"
+  },
+  "senado-173226": {
+    "title": "Cursos e campanhas para apoiar a parentalidade positiva",
+    "text": "A proposta inclui cursos, campanhas e palestras baseados em evidências científicas entre as ações de promoção da parentalidade positiva. A mudança trata das formas de orientação e apoio às famílias.",
+    "affected": "Famílias e responsáveis pelas ações de apoio à parentalidade.",
+    "fingerprint": "1bf1653d7de432db2c2250143ca852689d92ab5119e6319e2938fda5d4c57328"
+  },
+  "senado-171335": {
+    "title": "Campanha Setembro em Flor sobre tumores ginecológicos",
+    "text": "A proposta cria a campanha Setembro em Flor para conscientizar sobre tumores ginecológicos. A ementa informa a finalidade da campanha, sem detalhar novos serviços ou tratamentos.",
+    "affected": "Público das ações de conscientização e responsáveis pela campanha.",
+    "fingerprint": "4c04c092768e996ec3aaebc9fa4d2fad4ab750ac2a2c74e387a4b8966fb9c4c2"
+  },
+  "senado-102633": {
+    "title": "Cooperação em defesa entre Brasil e Guiana",
+    "text": "O projeto submete à aprovação legislativa um acordo de cooperação em defesa entre Brasil e Guiana. As atividades previstas e as condições de aplicação estão no texto do acordo.",
+    "affected": "Governos e órgãos de defesa dos dois países.",
+    "fingerprint": "c809aa1c20f77285843134f8f2f52bb34a2deb3ad421bd2dd5c4b2e721821152"
+  },
+  "senado-174513": {
+    "title": "Cooperação espacial entre Brasil e Venezuela",
+    "text": "O projeto trata da aprovação de um acordo entre Brasil e Venezuela para cooperação em ciência e tecnologia espacial. Projetos, responsabilidades e condições devem ser conferidos no acordo.",
+    "affected": "Governos e instituições envolvidos na cooperação espacial.",
+    "fingerprint": "389932803a4d0cfccefaafefa7ffead271f89d4f2f0b80a69430d4453aad3df0"
+  },
+  "camara-2399325": {
+    "title": "Condições mais favoráveis ao empregado",
+    "text": "A proposta altera a CLT e a lei do trabalho temporário para tratar do princípio da condição mais favorável ao empregado. Quais regras seriam modificadas e como se aplicariam depende do texto em análise.",
+    "affected": "Empregados e empregadores, inclusive nas relações de trabalho temporário.",
+    "fingerprint": "60d0248bc8cd321ba299ca194aa67d1307f393d6b835c7932e2b203d3e1ec63a"
+  },
+  "camara-2233100": {
+    "title": "Regras para a denominação Cachaça Artesanal",
+    "text": "A proposta cria a denominação Cachaça Artesanal e trata de sua produção, fiscalização e venda. Os critérios para usar essa denominação devem ser conferidos no projeto.",
+    "affected": "Produtores, comerciantes, consumidores e órgãos de fiscalização.",
+    "fingerprint": "19041739a1dcb90991f3fbb1160e527385bddf01d44b3a6e0c3bcb894318e6ec"
+  },
+  "camara-2415638": {
+    "title": "Suspensão de licença de empresas da construção civil",
+    "text": "A proposta trata da suspensão da licença de empresas da construção civil em casos de descumprimento de execuções judiciais e risco flagrante de falta de saúde financeira. Os requisitos e o procedimento dependem do texto em análise.",
+    "affected": "Empresas da construção civil e pessoas envolvidas nas execuções judiciais.",
+    "fingerprint": "313366ef284afb49ea97ce48760beb9908ecd56531c41b501f1afa0a04805d2f"
+  },
+  "camara-2484301": {
+    "title": "Uso de marca após utilização prolongada sem oposição",
+    "text": "A proposta permite o direito de uso de uma marca após utilização prolongada sem oposição. Os prazos, requisitos e limites dessa possibilidade precisam ser conferidos no texto do projeto.",
+    "affected": "Pessoas e empresas que usam marcas e titulares de direitos sobre elas.",
+    "fingerprint": "f693af69144e6c5578fe0832c3f9d223a502309cba3525bb24129fd6f7d5b9ed"
+  },
+  "camara-2486602": {
+    "title": "Alerta sobre empresas na lista de trabalho escravo",
+    "text": "A proposta cria um selo de alerta para empresas que constam na Lista Suja do trabalho análogo à escravidão. As regras de exibição e aplicação do selo estão no texto em análise.",
+    "affected": "Empresas incluídas na lista e pessoas que contratam ou compram delas.",
+    "fingerprint": "d6e69d0e8dc0d00ed5bc97121d562581540cb82bf19d32916d33ec27d9624cfe"
+  },
+  "camara-2498417": {
+    "title": "Proibição de venda de animais em pet shops e lojas",
+    "text": "A proposta proíbe a venda de animais em pet shops e lojas e busca incentivar a adoção. O alcance da proibição e as condições de aplicação dependem do texto aprovado.",
+    "affected": "Lojas, pet shops e pessoas interessadas em adquirir ou adotar animais.",
+    "fingerprint": "368f7bf00791a3169fd642e8c851ec3292d479dea3947fa8c2cdae60d075282e"
+  },
+  "camara-2539033": {
+    "title": "Regras ambientais para produtos de higiene pessoal",
+    "text": "A proposta estabelece normas para fabricar, importar, vender e rotular produtos de higiene pessoal, com objetivos de proteção ambiental, saúde pública e funcionamento do esgoto. A ementa não identifica todos os produtos e exigências.",
+    "affected": "Fabricantes, importadores, comerciantes e consumidores de produtos de higiene pessoal.",
+    "fingerprint": "e908fa84fb5cc04a969b8f04c658545173146bbf559ef8573ed758928db8343e"
+  },
+  "camara-2555233": {
+    "title": "Proteção de créditos trabalhistas em falências",
+    "text": "A proposta muda regras de representação e proteção dos valores devidos aos trabalhadores em processos de recuperação judicial e falência. O texto em análise define quais garantias seriam alteradas.",
+    "affected": "Trabalhadores com valores a receber e empresas em recuperação judicial ou falência.",
+    "fingerprint": "b7c637d471d017564ade2f1a2c41f4d3b66bb5e0584475e362d356f742567761"
+  },
+  "camara-2567594": {
+    "title": "Participação de menores de idade como sócios",
+    "text": "A proposta proíbe que menores de 18 anos sejam sócios de sociedades empresárias, sociedades simples ou cooperativas. As condições de aplicação e eventuais regras de transição devem ser conferidas no projeto.",
+    "affected": "Menores de idade, seus responsáveis e as sociedades envolvidas.",
+    "fingerprint": "9ac33772ade67a0aa28ca90a87200001c21fdc56c723cda5c6817f2679769921"
+  },
+  "camara-2568030": {
+    "title": "Estoques de grãos na recuperação judicial",
+    "text": "A proposta trata da classificação dos estoques de grãos como essenciais no contexto da recuperação judicial. A ementa não informa todos os efeitos dessa classificação sobre a venda ou utilização dos estoques.",
+    "affected": "Empresas em recuperação judicial que mantêm estoques de grãos e seus credores.",
+    "fingerprint": "26e1c4c4ba8b35073e65dc864700b8554bb8078ffc53c03035d0581f546c6446"
+  },
+  "camara-2573869": {
+    "title": "Regras para parcerias de profissionais autônomos",
+    "text": "A proposta cria uma política nacional para regulamentar parcerias autônomas entre profissionais e estabelecimentos de serviços. Os direitos, deveres e critérios para essas parcerias dependem do texto em análise.",
+    "affected": "Profissionais autônomos e estabelecimentos que firmam essas parcerias.",
+    "fingerprint": "7026f32d039189ac14798c01e0e6dc57fa5bf06f04070a80a58d67c8a0f5c2d3"
+  },
+  "camara-2602554": {
+    "title": "Relações entre plataformas de venda e lojistas parceiros",
+    "text": "A proposta estabelece regras para a relação entre plataformas de comércio eletrônico e vendedores parceiros. Prevê transparência, prazo antes de mudanças contratuais e proibição de práticas abusivas. Os detalhes dependem do texto aprovado.",
+    "affected": "Plataformas de comércio eletrônico e vendedores que usam seus serviços.",
+    "fingerprint": "78e62a6be27b83a2b15cfb5b13917a979621ddfddf5f401708ca8601c0d6133f"
+  },
+  "camara-2355896": {
+    "title": "Pena maior para quem atribui crime de drogas a inocente",
+    "text": "A proposta aumenta a pena quando um crime da Lei de Drogas envolve fraude ou outro artifício para responsabilizar uma pessoa inocente. Também trata da aplicação conjunta de causas de aumento de pena. O alcance depende do texto aprovado.",
+    "affected": "Pessoas envolvidas nesses processos e órgãos responsáveis pela aplicação da lei.",
+    "fingerprint": "155ce78170edc731269e1813a6ce1bdc231d0a46a257884a7f50450b1d034f05"
+  },
+  "camara-2482618": {
+    "title": "Câmeras e reconhecimento facial na busca de desaparecidos",
+    "text": "A proposta incorpora câmeras de segurança e reconhecimento facial à Política Nacional de Busca de Pessoas Desaparecidas. As condições de uso dessas tecnologias e as demais medidas precisam ser conferidas no projeto.",
+    "affected": "Pessoas desaparecidas, suas famílias e órgãos responsáveis pelas buscas.",
+    "fingerprint": "1cc8a1b0d060d4160497b11b977cd8457bfaf5a90a48946cbeb1d4e6ac1430dd"
+  }
+,
+
   "camara-2647144": {
     "title": "Pedido de explicações sobre medicamento para acondroplasia no SUS",
     "text": "O requerimento pede ao Ministério da Saúde informações sobre a decisão de não incluir a vosoritida no SUS para tratar acondroplasia. Também pede os motivos da rejeição dos recursos apresentados. A aprovação do pedido não inclui o medicamento no SUS.",
