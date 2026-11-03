@@ -1,0 +1,10 @@
+data/live.json
+data/live*.tmp
+data/collect.lock
+data/*.pid
+data/*.log
+.hallmark/
+node_modules/
+.env
+.env.*
+!.env.example

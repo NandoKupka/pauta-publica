@@ -1,0 +1,8 @@
+:root{
+  --paper:#f8f6f0;--surface:#fffdf8;--ink:#16233a;--muted:#526078;--rule:#dbdcd8;--field-rule:#7b8595;
+  --blue:#234983;--night:#172844;--night-raised:#203655;--night-rule:#415879;
+  --white:#fffefa;--mist:#d5e2f2;--pale:#dbe8ff;--light-focus:#bdd7ff;--focus:#2262b7;
+  --soft:#edf0f5;--status-ink:#435373;--success:#245f45;--success-bg:#e3f2e9;--error:#873943;--error-bg:#f9e8e8;
+  --warning-ink:#815124;--warning-bg:#fcf4e7;--warning-rule:#dfc298;
+  --display:Georgia,"Times New Roman",serif;--body:system-ui,"Segoe UI",sans-serif;
+}

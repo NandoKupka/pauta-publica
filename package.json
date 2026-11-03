@@ -1,0 +1,12 @@
+{
+  "name": "pauta-publica",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node server.mjs",
+    "collect": "node collect.mjs",
+    "test": "node --test"
+  }
+}
