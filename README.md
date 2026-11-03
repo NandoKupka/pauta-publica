@@ -17,7 +17,7 @@ Os textos de orientação usam regras de apresentação e os campos oficiais. H�
 
 ## Rodar
 
-Requer Node.js 22 ou posterior. O site não usa banco de dados, contas ou dependências npm.
+Requer Node.js 22 ou posterior. O servidor local não precisa de dependências npm de produção. A geração estática e os testes de publicação usam as dependências de desenvolvimento versionadas no lockfile.
 
 ```sh
 node server.mjs
@@ -27,10 +27,30 @@ Abra [http://127.0.0.1:4173](http://127.0.0.1:4173). O servidor só escuta na m�
 
 ```sh
 node collect.mjs
+npm ci
 node --test
 ```
 
 O primeiro comando faz uma coleta imediata e grava `data/live.json`. Se o servidor já estiver rodando, reinicie-o para ler esse arquivo imediatamente. Defina `PAUTA_OFFLINE=1` para servir a cópia local sem consultar a rede. A atualização requer acesso à internet durante toda a execução. O painel mostra, por consulta, a última tentativa, a data dos dados e a cobertura. `GET /api/status` apresenta os mesmos estados, além da quantidade de pautas, movimentos e registros preservados. Após uma hora sem atualização, os dados deixam de aparecer como atuais. A primeira coleta dos detalhes de centenas de pautas pode levar alguns minutos; a cópia anterior continua disponível enquanto isso.
+
+## GitHub Pages
+
+O workflow `.github/workflows/pages.yml` gera uma edição estática a cada envio para `main`, por acionamento manual e, após o repositório estar público, a cada 30 minutos. O agendamento do GitHub pode sofrer atrasos; a interface informa as datas reais de consulta. As páginas individuais são HTML e continuam legíveis sem JavaScript. Na edição do Pages, busca e filtros funcionam no navegador com um índice de dados da mesma publicação.
+
+```sh
+npm ci
+npm run build:pages
+node scripts/check-pages.mjs
+node scripts/preview-pages.mjs
+```
+
+A prévia estática fica em [http://127.0.0.1:4184/pauta-publica/](http://127.0.0.1:4184/pauta-publica/). `PAGES_BASE_PATH` permite alterar o subdiretório na geração. Os arquivos publicáveis ficam em `dist/`, fora do controle de versão. O empacotamento adapta os caminhos dos recursos e cria um diretório para cada pauta; não depende de redirecionamento de SPA nem de um servidor Node no Pages.
+
+Para ativar no GitHub, a origem de **Settings → Pages** deve ser **GitHub Actions**, com o ambiente `github-pages`. A URL do projeto é `https://nandokupka.github.io/pauta-publica/`. A disponibilidade do Pages para repositórios privados depende do plano do GitHub; o workflow não altera a visibilidade do repositório. Enquanto ele permanecer privado, envios podem verificar e empacotar o projeto, mas a publicação e as coletas agendadas ficam desabilitadas.
+
+O coletor roda no Actions, sem credenciais de serviços externos. A branch `data` preserva a última cópia completa e o histórico entre execuções. O workflow restaura esse estado antes de coletar e o salva com um push normal, sem sobrescrever atualizações concorrentes. Uma falha parcial de fonte mantém a última cópia disponível e seus avisos; falhas de testes ou geração impedem a publicação. O workflow usa apenas o `GITHUB_TOKEN` do próprio repositório e as Actions oficiais. A publicação ocorre somente depois que a verificação dos links e recursos passa.
+
+O teste opcional `node scripts/check-pages-browser.mjs` usa Chrome e `puppeteer-core`. Defina `CHROME_PATH` se o navegador estiver em outro local, e `PAGES_TEST_URL` para testar uma edição já publicada.
 
 ## Cobertura
 

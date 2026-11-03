@@ -80,7 +80,7 @@ export function render(snapshot,params=new URLSearchParams(),now=new Date()) {
   group=key;
   return separator+renderRow(row,today,snapshot,now,query(values));
  }).join('');
- return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Agenda, votações e decisões federais, com fontes e cobertura transparentes."><title>${esc(title)} | Pauta Pública</title><link rel="icon" href="/marca.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css"><script src="/client.js" defer></script></head><body>
+ return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Agenda, votações e decisões federais, com fontes e cobertura transparentes."><title>${esc(title)} | Pauta Pública</title><link rel="icon" href="/marca.svg" type="image/svg+xml"><link rel="stylesheet" href="/style.css"><script type="module" src="/client.js"></script></head><body>
  <a class="skip" href="#painel">Pular para o painel</a>
  <header class="top"><div class="wrap top-inner"><a class="brand" href="/"><span class="brand-icon">${icon('mark',24)}</span><span>Pauta Pública<small>Informação para acompanhar o poder</small></span></a><nav aria-label="Navegação principal"><a href="${link({})}">Painel</a><a href="#fontes">Fontes e cobertura</a></nav><span class="country">${icon('clock',16)} Horário de Brasília</span></div></header>
  <main class="wrap">

@@ -3,10 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start": "node server.mjs",
     "collect": "node collect.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "build:pages": "node build-pages.mjs"
+  },
+  "devDependencies": {
+    "@noble/hashes": "2.4.0",
+    "esbuild": "0.28.2",
+    "puppeteer-core": "25.16.0"
   }
 }
