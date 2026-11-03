@@ -8,7 +8,7 @@ const agenda = {id:'a',org:'stf',type:'agenda',date:'2026-11-04',title:'Julgamen
 const snapshot = entries => ({jobs:{stfAgenda:{ok:true,at:now.toISOString(),entries}}});
 
 test('escolher um dia mantém instituição e busca selecionadas',()=>{
-  const html=render(snapshot([agenda]),new URLSearchParams('orgao=stf&q=Julgamento'),now);
+  const html=render(snapshot([agenda]),new URLSearchParams('aba=agenda&orgao=stf&q=Julgamento'),now);
   assert.match(html,/href="[^"]*orgao=stf[^"]*q=Julgamento[^"]*dia=2026-11-04/);
 });
 
@@ -32,7 +32,7 @@ test('uma fonte atualizada não esconde a data antiga da instituição seleciona
     stfAgenda:{ok:false,status:'error',at:'2026-11-02T12:00:00Z',checkedAt:now.toISOString(),issues:['Falha de conexão.'],entries:[agenda]},
     camAgenda:{ok:true,status:'ready',at:now.toISOString(),entries:[]}
   }};
-  const html=render(data,new URLSearchParams('orgao=stf'),now);
+  const html=render(data,new URLSearchParams('aba=agenda&orgao=stf'),now);
   assert.ok(html.includes('1 fonte precisa de atenção'));
   assert.ok(html.includes('Cópia anterior'));
   assert.ok(html.includes('02/11/2026'));

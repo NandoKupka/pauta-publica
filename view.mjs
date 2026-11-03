@@ -1,6 +1,8 @@
 import { day, shift, sources } from './sources.mjs';
 import { jobs, jobHealth, ballotSummary, pautaHealth } from './data-quality.mjs';
 import { pautaPath, topicTitle, topicThemes, searchText, upcomingRecords, primaryPautas, matchesSearch } from './pautas.mjs';
+import { explanationFor } from './explanations.mjs';
+import { stageSummary, kindGuide } from './reading.mjs';
 const paths={
  mark:'<path d="M3 18h18M4 15h16M6 15V9m4 6V9m4 6V9m4 6V9M3 8l9-5 9 5H3Z"/>',
  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18m-13 5h2m4 0h2"/>',
@@ -30,7 +32,7 @@ const ongoing=(row,today)=>row.endDate&&row.date<today&&row.endDate>=today;
 const decisionHeadline=row=>/^(?:(?:a |o )?(?:stf|stj|tse|supremo(?: tribunal federal)?|plenário|[\p{L}]+ turma|ministro(?:\s+[\p{L}]+){0,4}))\s+(?:acolhe|anula|aprova|autoriza|concede|condena|confirma|declara|decide|defere|define|determina|derruba|extingue|fixa|garante|impede|indefere|invalida|julga|libera|mantém|nega|proíbe|reconhece|rejeita|restabelece|revoga|suspende|valida)\b/iu.test(row.title);
 const query=values=>{
  const p=new URLSearchParams();
- for(const [k,v]of Object.entries(values))if(v!==''&&v!=null&&!(k==='aba'&&v==='agenda')&&!(k==='semana'&&v===0))p.set(k,v);
+ for(const [k,v]of Object.entries(values))if(v!==''&&v!=null&&!(k==='semana'&&v===0))p.set(k,v);
  return '/'+(p.size?'?'+p:'')+'#painel';
 };
 const healthLabels={ready:'Consulta atualizada',partial:'Consulta parcial',error:'Falha na atualização',stale:'Dados desatualizados',unavailable:'Sem dados disponíveis'};
@@ -42,13 +44,13 @@ function sourceDetails(keys,snapshot,now) {
  }).join('');
 }
 export function render(snapshot,params=new URLSearchParams(),now=new Date()) {
- const today=day(now),tab=Object.hasOwn(tabs,params.get('aba'))?params.get('aba'):'agenda';
+ const today=day(now),tab=Object.hasOwn(tabs,params.get('aba'))?params.get('aba'):params.has('dia')||params.has('semana')?'agenda':'pautas';
  const org=Object.hasOwn(sources,params.get('orgao'))?params.get('orgao'):'',search=(params.get('q')??'').trim().slice(0,120);
  const rawDate=params.get('dia'),date=tab==='agenda'&&/^\d{4}-\d{2}-\d{2}$/.test(rawDate??'')&&rawDate>=today&&rawDate<=shift(today,20)?rawDate:'';
  const week=Math.min(2,Math.max(0,Math.floor(Number(params.get('semana')))||0));
  const inAgenda=tab==='pautas'&&params.get('em')==='agenda';
  const values={aba:tab,orgao:org,q:search,dia:date,semana:week,em:inAgenda?'agenda':'',pagina:params.get('pagina')||''};
- const link=updates=>esc(query({...values,...updates}));
+ const link=updates=>esc(query({...values,...(Object.keys(updates).length&&!Object.hasOwn(updates,'pagina')?{pagina:''}:{}),...updates}));
  const all=[...new Map(Object.entries(snapshot.jobs).flatMap(([key,job])=>(job.entries??[]).map(row=>({...row,sourceJob:row.sourceJob||key,fetchedAt:row.fetchedAt||job.at}))).filter(row=>row.date&&sources[row.org]).map(row=>[row.id,row])).values()];
  if(tab==='pautas')for(const p of primaryPautas(snapshot)){
   const next=upcomingRecords(p,snapshot,today)[0];
@@ -68,7 +70,7 @@ export function render(snapshot,params=new URLSearchParams(),now=new Date()) {
  const size=12,pages=Math.max(1,Math.ceil(filtered.length/size)),page=Math.max(1,Math.min(pages,Math.floor(Number(params.get('pagina')))||1));
  const rows=filtered.slice((page-1)*size,page*size);
  const needsAttention=relevant.filter(key=>jobHealth(snapshot.jobs[key],now)!=='ready');
- const title=tab==='pautas'?'Entenda cada pauta':tab==='agenda'?'Agenda'+(org?' — '+sources[org].short:' federal'):tab==='votacoes'?'Resultados de votação':tab==='decisoes'?'Decisões noticiadas':'Notícias oficiais';
+ const title=tab==='pautas'?'Entenda cada pauta'+(org?' — '+sources[org].short:''):tab==='agenda'?'Agenda'+(org?' — '+sources[org].short:' federal'):tab==='votacoes'?'Resultados de votação':tab==='decisoes'?'Decisões noticiadas':'Notícias oficiais';
  const days=Array.from({length:7},(_,i)=>shift(today,week*7+i));
  const totalToday=agenda.filter(row=>isOpen(row)&&row.date<=today&&(row.endDate||row.date)>=today).length;
  let group='';
@@ -84,26 +86,27 @@ export function render(snapshot,params=new URLSearchParams(),now=new Date()) {
  <a class="skip" href="#painel">Pular para o painel</a>
  <header class="top"><div class="wrap top-inner"><a class="brand" href="/"><span class="brand-icon">${icon('mark',24)}</span><span>Pauta Pública<small>Informação para acompanhar o poder</small></span></a><nav aria-label="Navegação principal"><a href="${link({})}">Painel</a><a href="#fontes">Fontes e cobertura</a></nav><span class="country">${icon('clock',16)} Horário de Brasília</span></div></header>
  <main class="wrap">
-  <div class="intro"><div><h1>Acompanhe as decisões do Brasil.</h1><p>Pautas, votos e julgamentos. Entenda quem decide e confira a fonte.</p></div><div class="today"><strong>${dt(today,{day:'2-digit',month:'long'})}</strong><span>${dt(today,{weekday:'long',year:'numeric'})}</span></div></div>
+  <div class="intro"><div><span class="intro-label">Câmara · Senado · Congresso · STF · STJ · TSE</span><h1>O que está em decisão.<br>O que pode mudar para você.</h1><p>Entenda as pautas, acompanhe as etapas e confira quem decide.</p></div><div class="today"><strong>${dt(today,{day:'2-digit',month:'long'})}</strong><span>${dt(today,{weekday:'long',year:'numeric'})}</span></div></div>
   <div class="workspace">
-   <aside class="institutions" aria-labelledby="instituicoes-titulo"><h2 id="instituicoes-titulo">Instituições</h2><nav class="directory" aria-label="Filtrar por instituição"><a class="all-orgs" href="${link({orgao:'',dia:'',q:''})}"${current(!org)}>${icon('mark',19)}<span><strong>Visão geral</strong><small>Todas as instituições</small></span></a>
-    ${Object.entries(sources).map(([key,s])=>`<a href="${link({aba:tab==='pautas'?'pautas':political(key)?(tab==='votacoes'?tab:'agenda'):key==='stf'&&tab==='agenda'?'agenda':tab==='decisoes'?'decisoes':'noticias',orgao:key,dia:'',q:''})}"${current(key===org)}>${icon(political(key)?'mark':'scale',19)}<span><strong>${s.short}</strong><small>${s.label}</small></span></a>`).join('')}
+   <aside class="institutions" aria-labelledby="instituicoes-titulo"><h2 id="instituicoes-titulo">Instituições</h2><nav class="directory" aria-label="Filtrar por instituição"><a class="all-orgs" href="${link({orgao:'',dia:''})}"${current(!org)}>${icon('mark',19)}<span><strong>Visão geral</strong><small>Todas as instituições</small></span></a>
+    ${Object.entries(sources).map(([key,s])=>`<a href="${link({aba:tab==='pautas'?'pautas':political(key)?(tab==='votacoes'?tab:'agenda'):key==='stf'&&tab==='agenda'?'agenda':tab==='decisoes'?'decisoes':'noticias',orgao:key,dia:''})}"${current(key===org)}>${icon(political(key)?'mark':'scale',19)}<span><strong>${s.short}</strong><small>${s.label}</small></span></a>`).join('')}
    </nav><div class="rail-note">${icon('info',20)}<p>Um resultado pode ser uma etapa da tramitação. O registro oficial esclarece o que foi decidido.</p></div></aside>
    <section class="panel" id="painel" aria-labelledby="painel-titulo">
     <nav class="tabs" aria-label="Tipo de registro">${Object.entries(tabs).map(([key,[name,ico]])=>`<a class="${key===tab?'active':''}" href="${link({aba:key,dia:''})}"${current(key===tab)}>${icon(ico,18)} ${name}</a>`).join('')}</nav>
-    <div class="panel-heading"><div><h2 id="painel-titulo">${esc(title)}</h2><p>${tab==='pautas'?'O que pode mudar, quem decide e o caminho de cada assunto.':tab==='agenda'?'O que está previsto e o que já está em andamento.':tab==='votacoes'?'O resultado de cada ato e os registros individuais disponíveis.':tab==='decisoes'?'Seleção pelo título das notícias. A data é a da publicação.':'Publicações dos canais oficiais das instituições.'}</p></div>${tab==='agenda'?`<span class="count-pill">${totalToday} sessões hoje</span>`:''}</div>
+    <div class="panel-heading"><div><h2 id="painel-titulo" tabindex="-1">${esc(title)}</h2><p>${tab==='pautas'?'Comece pelo assunto. Abra uma pauta para entender o que está em jogo.':tab==='agenda'?'O que está previsto e o que já está em andamento.':tab==='votacoes'?'O resultado de cada ato e os registros individuais disponíveis.':tab==='decisoes'?'Seleção pelo título das notícias. A data é a da publicação.':'Publicações dos canais oficiais das instituições.'}</p></div>${tab==='agenda'?`<span class="count-pill">${totalToday} sessões hoje</span>`:''}</div>
     <form class="filters" action="/#painel" method="get"><input type="hidden" name="aba" value="${tab}">${inAgenda?'<input type="hidden" name="em" value="agenda">':''}${date?`<input type="hidden" name="dia" value="${date}">`:''}<input type="hidden" name="semana" value="${week}">
      <label class="search"><span class="sr">Buscar assunto</span>${icon('search',20)}<input type="search" name="q" maxlength="120" value="${esc(search)}" placeholder="Busque um assunto, projeto ou processo"></label>
      <label class="select"><span class="sr">Filtrar por instituição</span><select name="orgao"><option value="">Todas as instituições</option>${Object.entries(sources).map(([key,s])=>`<option value="${key}"${key===org?' selected':''}>${s.short}</option>`).join('')}</select></label><button type="submit">Buscar</button>
     </form>
+    ${tab==='pautas'&&!search?`<nav class="topic-shortcuts" aria-label="Explorar assuntos"><span>Explore</span>${['Saúde','Trabalho e renda','Segurança e justiça','Apostas e loterias'].map(theme=>`<a href="${link({q:theme,pagina:''})}">${esc(theme)}</a>`).join('')}</nav>`:''}
     ${tab==='agenda'?`<section class="calendar" aria-label="Selecionar data"><div class="calendar-top"><span>${dt(days[0],{day:'numeric',month:'short'})} a ${dt(days[6],{day:'numeric',month:'short'})} <small>— sessões encontradas</small></span><nav aria-label="Semanas">${week>0?`<a href="${link({semana:week-1,dia:''})}" aria-label="Semana anterior">‹</a>`:''}${week<2?`<a href="${link({semana:week+1,dia:''})}" aria-label="Próxima semana">›</a>`:''}</nav></div><div class="week-days">${days.map(d=>{
       const count=agenda.filter(row=>isOpen(row)&&row.date<=d&&(row.endDate||row.date)>=d).length;
       return `<a href="${link({dia:d})}" class="week-day${date===d?' selected':''}${today===d?' today-day':''}" aria-label="${esc(fullDate(d))}, ${count} sessões"${current(date===d)}><span>${dt(d,{weekday:'short'})}</span><strong>${d.slice(-2)}</strong><small>${count}<span> ${count===1?'sessão':'sessões'}</span></small></a>`;
     }).join('')}</div></section>`:''}
-    ${relevant.length?`<details class="freshness ${needsAttention.length?'attention':'healthy'}"><summary><span>${icon(needsAttention.length?'info':'check',18)} ${needsAttention.length?numberLabel(needsAttention.length,'fonte precisa de atenção','fontes precisam de atenção'):tab==='pautas'?'Agendas e votações atualizadas':'Consultas atualizadas'}<small>${needsAttention.length?'Confira a idade dos dados antes de acompanhar a pauta.':'A cobertura varia por instituição.'}</small></span><span class="summary-action">Ver detalhes ${icon('chevron',15)}</span></summary><ul class="source-list">${sourceDetails(relevant,snapshot,now)}</ul></details>`:''}
-    ${tab==='pautas'?`<div class="pauta-tools"><nav aria-label="Situação das pautas"><a href="${link({em:'',pagina:''})}"${current(!inAgenda)}>Todas acompanhadas</a><a href="${link({em:'agenda',pagina:''})}"${current(inAgenda)}>Com sessão prevista</a></nav><p>Projetos e processos identificados nas agendas e votações coletadas.${org==='stj'||org==='tse'?' Esta instituição tem apenas notícias nesta versão.':''}</p></div>`:''}
+    ${relevant.length?`<details class="freshness ${needsAttention.length?'attention':'healthy'}"><summary><span>${icon(needsAttention.length?'info':'check',18)} ${needsAttention.length?numberLabel(needsAttention.length,'fonte precisa de atenção','fontes precisam de atenção'):tab==='pautas'?'Fontes da agenda atualizadas':'Consultas atualizadas'}<small>${needsAttention.length?'Confira a idade dos dados antes de acompanhar a pauta.':'A cobertura varia por instituição.'}</small></span><span class="summary-action">Ver detalhes ${icon('chevron',15)}</span></summary><ul class="source-list">${sourceDetails(relevant,snapshot,now)}</ul></details>`:''}
+    ${tab==='pautas'?`<div class="pauta-tools"><nav aria-label="Situação das pautas"><a href="${link({em:'',pagina:''})}"${current(!inAgenda)}>Todas as pautas</a><a href="${link({em:'agenda',pagina:''})}"${current(inAgenda)}>Na agenda</a></nav>${org==='stj'||org==='tse'?'<p>Esta instituição tem apenas notícias nesta versão.</p>':''}</div>`:''}
     <div class="list-top"><span>${numberLabel(filtered.length,tab==='pautas'?'pauta':'registro',tab==='pautas'?'pautas':'registros')}${date?' em '+esc(dt(date,{day:'numeric',month:'long'})):''}</span>${search||org||date?`<a href="${link({orgao:'',q:'',dia:''})}">Limpar filtros</a>`:`<span>${tab==='pautas'?'Na agenda primeiro':tab==='agenda'?'Próximos 21 dias':'Mais recentes primeiro'}</span>`}</div>
-    ${rows.length?`<ol class="records">${records}</ol>`:`<div class="empty">${icon(tabs[tab][1],32)}<h3>${relevant.length?'Nenhum registro encontrado':'Esta seção ainda não cobre '+esc(sources[org]?.short??'a instituição')}</h3><p>${!relevant.length?'Veja as notícias ou consulte diretamente a instituição.':needsAttention.length?'Uma consulta está indisponível ou incompleta. Confira os detalhes da fonte acima.':'Tente outro assunto, instituição ou data.'}</p>${org?external(sources[org].url,'Consultar fonte oficial'):''}</div>`}
+    ${rows.length?`<ol class="records${tab==='pautas'?' pauta-grid':''}">${records}</ol>`:`<div class="empty">${icon(tabs[tab][1],32)}<h3>${relevant.length?'Nenhum registro encontrado':'Esta seção ainda não cobre '+esc(sources[org]?.short??'a instituição')}</h3><p>${!relevant.length?'Veja as notícias ou consulte diretamente a instituição.':needsAttention.length?'Uma consulta está indisponível ou incompleta. Confira os detalhes da fonte acima.':'Tente outro assunto, instituição ou data.'}</p>${org?external(sources[org].url,'Consultar fonte oficial'):''}</div>`}
     ${pages>1?`<nav class="pagination" aria-label="Páginas de resultados">${page>1?`<a href="${link({pagina:page-1})}">Anterior</a>`:''}<span>Página ${page} de ${pages}</span>${page<pages?`<a href="${link({pagina:page+1})}">Próxima ${icon('arrow',16)}</a>`:''}</nav>`:''}
    </section>
   </div>
@@ -111,11 +114,12 @@ export function render(snapshot,params=new URLSearchParams(),now=new Date()) {
  </main><footer class="wrap footer"><span>Pauta Pública</span><p>Projeto independente de acompanhamento cívico.</p><span>Fontes oficiais, contexto transparente.</span></footer></body></html>`;
 }
 function renderPautaCard(row,returnTo,today,now){
- const p=row.pauta,d=p.details??{},href=esc(pautaPath(p.id)+'?retorno='+encodeURIComponent(returnTo));
- const health=pautaHealth(p,now);
- const title=topicTitle(p),subject=title===p.reference?'Contexto ainda não disponível':clip(title,180);
- return `<li class="pauta-card"><article><div class="meta"><span>${sources[p.org].short}</span><span class="pauta-reference">${esc(p.reference)}</span>${row.next?'<span class="status positive">Na agenda</span>':''}${health!=='ready'?`<span class="stale-label">${health==='stale'?'Detalhes antigos':'Detalhes incompletos'}</span>`:''}</div><h3><a href="${href}">${esc(subject)}</a></h3><p class="pauta-stage">${esc(d.status||'Acompanhamento da pauta')}${d.statusAt?' · '+esc(fullDate(d.statusAt)):''}</p><div class="pauta-card-bottom"><div class="topic-tags">${topicThemes(p).slice(0,2).map(theme=>`<span>${theme}</span>`).join('')}</div><a class="pauta-cta" href="${href}">Entender pauta ${icon('arrow',17)}</a></div>${row.next?`<p class="pauta-next">${icon('calendar',15)} ${row.next.date===today?'Hoje':esc(fullDate(row.next.date))}${row.next.time?' · '+esc(row.next.time):''} — ${esc(row.next.body||row.next.decisionMaker||sources[row.next.org].short)}</p>`:''}</article></li>`;
+ const p=row.pauta,href=esc(pautaPath(p.id)+'?retorno='+encodeURIComponent(returnTo));
+ const health=pautaHealth(p,now),explanation=/transformad[oa] em norma/i.test(p.details?.status||'')?null:explanationFor(p),state=stageSummary(p),kind=kindGuide(p);
+ const title=topicTitle(p),subject=title===p.reference?'Contexto ainda não disponível':clip(title,160);
+ return `<li class="pauta-card"><article><div class="meta"><span>${sources[p.org].short}</span><span class="pauta-reference">${esc(p.reference)}</span>${row.next?'<span class="status positive">Na agenda</span>':''}${health!=='ready'?`<span class="stale-label">${health==='stale'?'Detalhes antigos':'Detalhes incompletos'}</span>`:''}</div><h3><a href="${href}">${esc(subject)}</a></h3>${explanation?`<p class="card-explanation">${esc(clip(explanation.text,220))}</p><span class="card-method">Resumo com auxílio de IA · fonte na pauta</span>`:''}<p class="pauta-stage"><span>${esc(kind.label)}</span> · ${esc(state.label)}</p>${row.next?`<p class="pauta-next">${icon('calendar',16)}<span><strong>${row.next.date===today?'Hoje':esc(fullDate(row.next.date))}${row.next.time?' · '+esc(row.next.time):''}</strong><span>${esc(row.next.body||row.next.decisionMaker||sources[row.next.org].short)}</span></span></p>`:'<p class="no-session">Próxima sessão não encontrada na coleta.</p>'}<div class="pauta-card-bottom"><div class="topic-tags">${topicThemes(p).slice(0,1).map(theme=>`<span>${esc(theme)}</span>`).join('')}</div><a class="pauta-cta" href="${href}">Entender pauta ${icon('arrow',17)}</a></div></article></li>`;
 }
+
 function renderRow(row,today,snapshot,now,returnTo){
  const s=sources[row.org],agenda=row.type==='agenda',news=row.type==='noticias',active=ongoing(row,today);
  const status=active?'Em andamento':row.status;

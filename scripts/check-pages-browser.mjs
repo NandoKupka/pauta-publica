@@ -7,6 +7,15 @@ try{
   const page=await browser.newPage(),errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.setViewport({width:1366,height:900});
+  await page.goto(base);
+  await page.waitForSelector('.pauta-grid .pauta-card');
+  assert.match(await page.title(),/Entenda cada pauta/);
+  await page.click('.topic-shortcuts a');
+  assert.equal(await page.$eval('input[name=q]',node=>node.value),'Saúde');
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'painel-titulo');
+  await page.click('.directory a[href*="orgao=senado"]');
+  assert.equal(await page.$eval('input[name=q]',node=>node.value),'Saúde');
+  assert.match(page.url(),/orgao=senado/);
   await page.goto(base+'?orgao=senado#painel');
   await page.waitForSelector('.directory a[aria-current]');
   await page.waitForFunction(()=>document.querySelector('#painel-titulo')?.textContent.includes('Senado'));
@@ -32,13 +41,23 @@ try{
   const search=await details.$('.ballot-search input');
   if(search){await search.type('nome que não existe');assert.equal(await details.$$eval('tbody tr:not([hidden])',nodes=>nodes.length),0);}
   await page.goto(base+'pauta/camara-2355754/');assert.ok(await page.$('.related-documents'));
+  await page.goto(base+'pauta/camara-2333814/');
+  assert.match(await page.$eval('h1',node=>node.textContent),/Auxílio a responsáveis/);
+  assert.ok(await page.$('.reading-intro .reading-lead'));
+  assert.equal(await page.$eval('.original-summary',node=>node.open),false);
+  await page.click('.original-summary summary');
+  assert.ok(await page.$eval('.original-summary .impact-text',node=>node.getBoundingClientRect().height>0));
+  await page.click('.type-guide summary');
+  assert.ok(await page.$eval('.type-guide',node=>node.open));
   await page.setJavaScriptEnabled(false);await page.goto(base+'pauta/stf-adpf-1212/');
   for(const id of ['mudanca','responsaveis','historico','proximos'])assert.ok(await page.$('#'+id));
   await page.setJavaScriptEnabled(true);
-  for(const width of [390,768]){
+  for(const width of [320,390,768]){
     await page.setViewport({width,height:844});
     for(const path of ['?aba=pautas&q=bet#painel','pauta/stf-adpf-1212/']){
       await page.goto(base+path);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
+      if(width<=390&&path.startsWith('?'))assert.ok(await page.$$eval('.tabs a',nodes=>nodes.every(node=>node.getBoundingClientRect().right<=innerWidth)));
+      if(width<=390&&path.startsWith('pauta'))assert.ok(await page.evaluate(()=>document.querySelector('.reading-lead').getBoundingClientRect().top<document.querySelector('.pauta-position').getBoundingClientRect().top));
     }
   }
   assert.equal((await page.goto(base+'pauta/nao-existe/')).status(),404);

@@ -10,7 +10,7 @@ function showMessage(text) {
   if(!note){note=document.createElement('p');note.className='publication-note';document.querySelector('main')?.prepend(note);}
   note.textContent=text;
 }
-function renderPanel(scroll=false) {
+function renderPanel(scroll=false,focus=false) {
   if(!snapshot)return;
   const html=withBase(render(snapshot,new URLSearchParams(location.search),new Date()),base);
   const next=new DOMParser().parseFromString(html,'text/html');
@@ -18,6 +18,7 @@ function renderPanel(scroll=false) {
   document.querySelector('.top').replaceWith(next.querySelector('.top'));
   document.title=next.title;
   initBallotSearch();
+  if(focus)document.querySelector('#painel-titulo')?.focus({preventScroll:true});
   if(scroll)document.querySelector('#painel')?.scrollIntoView();
 }
 async function start() {
@@ -35,7 +36,7 @@ async function start() {
     if(!snapshot.jobs||!snapshot.pautas)throw new Error('Dados inválidos');
     renderPanel(Boolean(location.hash));
   }catch{
-    showMessage('Não foi possível carregar a busca e os filtros. A agenda abaixo é a edição publicada; tente recarregar a página.');
+    showMessage('Não foi possível carregar a busca e os filtros. A lista abaixo é a edição publicada; tente recarregar a página.');
   }
 }
 document.addEventListener('click',event=>{
@@ -43,14 +44,14 @@ document.addEventListener('click',event=>{
   if(!snapshot||!a||a.getAttribute('href')?.startsWith('#')||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey||a.target||a.hasAttribute('download'))return;
   const url=new URL(a.href);
   if(url.origin!==location.origin||url.pathname!==base||(!url.search&&url.hash&&url.hash!=='#painel'))return;
-  event.preventDefault();history.pushState(null,'',url);renderPanel(true);
+  event.preventDefault();history.pushState(null,'',url);renderPanel(true,true);
 });
 document.addEventListener('submit',event=>{
   const form=event.target;
   if(!snapshot||!form.matches('.filters'))return;
   event.preventDefault();
   const url=new URL(base,location.origin);url.search=new URLSearchParams(new FormData(form)).toString();url.hash='painel';
-  history.pushState(null,'',url);renderPanel(true);
+  history.pushState(null,'',url);renderPanel(true,true);
 });
 window.addEventListener('popstate',()=>renderPanel(Boolean(location.hash)));
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)renderPanel();});

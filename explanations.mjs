@@ -1,6 +1,68 @@
 // Source-bound summaries. Any change in the supporting official text disables the summary until reviewed.
 import { createHash } from 'node:crypto';
 const explanations = {
+
+  "camara-2647144": {
+    "title": "Pedido de explicações sobre medicamento para acondroplasia no SUS",
+    "text": "O requerimento pede ao Ministério da Saúde informações sobre a decisão de não incluir a vosoritida no SUS para tratar acondroplasia. Também pede os motivos da rejeição dos recursos apresentados. A aprovação do pedido não inclui o medicamento no SUS.",
+    "fingerprint": "c0979cce8e186f02c30662549d7811495ee10ffc092aa4610830d39de9ce9a03"
+  },
+  "camara-2333814": {
+    "title": "Auxílio a responsáveis por pessoas com deficiência",
+    "text": "A proposta prevê auxílio mensal de um salário mínimo a pais ou responsáveis nas situações de deficiência e doença rara descritas no texto, com limite de renda familiar por pessoa. Também propõe passe livre interestadual para responsáveis de baixa renda. As condições dependem do texto aprovado.",
+    "fingerprint": "79d80b27664a1616004bd2d20a98a4a49400fbe2fb5ef2c276cc3269f037f6ed"
+  },
+  "camara-2599601": {
+    "title": "Acessibilidade nos totens de autoatendimento",
+    "text": "A proposta quer tornar obrigatória a acessibilidade plena nos totens de autoatendimento de estabelecimentos públicos e privados. Os requisitos e a forma de aplicação devem ser conferidos no texto em análise.",
+    "fingerprint": "05315c04bfd28c1928ec77a2997fcf445863ac37edb5c7936fe1b8e2fa2b26a7"
+  },
+  "camara-2599713": {
+    "title": "Inclusão de idosos com deficiência no esporte",
+    "text": "A proposta estabelece diretrizes para incluir idosos com deficiência física em atividades esportivas. A ementa informa o objetivo geral; as ações previstas precisam ser conferidas no texto do projeto.",
+    "fingerprint": "b98e22c6c1d215d50ff936303ef450e6bbacae27a5b3e029f8966ef344848785"
+  },
+  "camara-2601056": {
+    "title": "Recursos digitais no apoio escolar a alunos autistas",
+    "text": "A proposta trata do uso de computadores, tablets e celulares por terapeutas nas escolas para apoiar estudantes com transtorno do espectro autista. As condições de uso dependem do texto em análise.",
+    "fingerprint": "a9a289e5191a3a66d5a1341435425c54f18345d2fb8b74691c4e8de390e1de77"
+  },
+  "camara-2611932": {
+    "title": "Credencial de estacionamento sem prazo de validade",
+    "text": "A proposta quer que a credencial de estacionamento tenha validade por prazo indeterminado para pessoas com deficiência e comprometimento permanente da mobilidade. A mudança ainda depende da tramitação.",
+    "fingerprint": "b4d0968636ecdc1094d0cb991c5d3e6a8b350cc7220be09ef8ebd27d3ce847ce"
+  },
+  "camara-2614899": {
+    "title": "Símbolos de deficiência nos documentos de identidade",
+    "text": "A proposta quer tornar obrigatória a inclusão do Símbolo Internacional de Acessibilidade e de outros símbolos de identificação de deficiências nos documentos oficiais de identidade. As condições dependem do texto aprovado.",
+    "fingerprint": "a59437f44de5f0f2bb1f787b9acb66ad0cfdbdaf5c410a1088168f55b8cddeff"
+  },
+  "camara-2620547": {
+    "title": "Incentivos fiscais para tecnologias assistivas",
+    "text": "A proposta prevê incentivos fiscais para empresas que desenvolvem tecnologias assistivas. A ementa não detalha quais incentivos seriam concedidos; é preciso consultar o texto para conhecer as condições.",
+    "fingerprint": "6da66bed7662f5c392c3b19645caddaa227e8d471307b88b4acf66b13082f1f2"
+  },
+  "camara-2627936": {
+    "title": "Apoio a famílias e a pessoas que precisam de cuidados permanentes",
+    "text": "A proposta cria uma política de apoio e proteção às famílias atípicas e um auxílio para pessoas com autismo e outras deficiências que demandem cuidados permanentes. Valores, requisitos e aplicação dependem do texto em análise.",
+    "fingerprint": "7591d2b5aa6b71d804dc43a3f172aff6df05bbcc893c968818288dea09bac708"
+  },
+  "camara-2629982": {
+    "title": "Informações do cadastro nacional de pessoas com deficiência",
+    "text": "A proposta altera o Estatuto da Pessoa com Deficiência para tratar das informações do Cadastro-Inclusão. A ementa não especifica todas as mudanças nos dados do cadastro; esses detalhes estão no texto do projeto.",
+    "fingerprint": "fdfc35d9f47a1e867545e143c0aed7b6da93f442474e66a5178cf849fa2ee1e9"
+  },
+  "camara-2204495": {
+    "title": "Criação do Dia Nacional do Autocuidado",
+    "text": "A proposta inclui o Dia Nacional do Autocuidado no calendário nacional. O objeto descrito na ementa é a criação dessa data.",
+    "fingerprint": "fef67f4ec34c5ebb9fba56f03c09f42723512af37b677954c1166fa2f80b69e8"
+  },
+  "camara-2647427": {
+    "title": "Monitoração eletrônica para proteção de vítimas de violência",
+    "text": "A proposta muda a Lei Maria da Penha para estabelecer garantias na monitoração eletrônica usada como medida protetiva. Trata de alertas sonoros e luminosos, de um mecanismo excepcional de contenção física remota e da proteção da vítima. As condições precisam ser conferidas no texto em análise.",
+    "fingerprint": "b944c874610cdd4e1dcb94a8d14b903a4abbe8a1cf2f103c56656e4597b862f7"
+  }
+,
   "stf-adpf-1212": {
     "title": "Loterias e apostas criadas por municípios",
     "text": "O processo discute se prefeituras podem criar e explorar loterias próprias. A decisão pode afetar as leis municipais que autorizam essas atividades e a atuação das empresas que operam com essas autorizações.",

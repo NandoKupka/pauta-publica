@@ -1,6 +1,6 @@
 # Pauta Pública
 
-Painel cívico local para acompanhar a agenda federal, ver resultados de votações e encontrar decisões noticiadas pelos tribunais. Cobre Câmara dos Deputados, Senado Federal, Congresso Nacional, STF, STJ e TSE.
+Painel cívico para entender pautas, acompanhar a agenda federal, ver resultados de votações e encontrar decisões noticiadas pelos tribunais. Disponível no [GitHub Pages](https://nandokupka.github.io/pauta-publica/) e como servidor local. Cobre Câmara dos Deputados, Senado Federal, Congresso Nacional, STF, STJ e TSE.
 
 ## Páginas de acompanhamento
 
@@ -11,9 +11,11 @@ A aba **Pautas** reúne os projetos e processos identificados nas agendas e vota
 - STF: temas, questão submetida ao tribunal, relatoria, partes e marcos datados do resumo da pauta presencial. Esse histórico é parcial, não o andamento processual completo. Votos de ministros e processos das sessões virtuais ainda dependem da consulta oficial.
 - STJ e TSE continuam com notícias. O site não cria páginas de processos a partir de títulos de notícias nem inventa vínculos entre matérias homônimas de casas diferentes.
 
-A busca inclui ementas, indexação oficial e termos cotidianos de temas, como “bets”, “saúde” e “aposentadoria”. O filtro **Com sessão prevista** mostra assuntos ainda presentes na agenda coletada. URLs de filtros e páginas podem ser compartilhadas; o retorno à lista preserva a busca. Navegação, histórico e filtros funcionam sem JavaScript.
+A entrada do site abre **Pautas**, com atalhos por assunto e cartões que mostram a etapa e a próxima sessão encontrada. A busca inclui ementas, indexação oficial e termos cotidianos de temas, como “bets”, “saúde” e “aposentadoria”. O filtro **Na agenda** mostra assuntos ainda presentes na agenda coletada. Trocar instituição preserva a busca e reinicia a paginação. URLs de filtros e páginas podem ser compartilhadas; o retorno à lista preserva a busca. Links antigos com `dia` ou `semana` continuam abrindo a agenda. No servidor local, navegação, histórico e filtros funcionam sem JavaScript; no Pages, os filtros usam JavaScript.
 
 Os textos de orientação usam regras de apresentação e os campos oficiais. Há também resumos específicos em linguagem simples em `explanations.mjs`, identificados na página como elaborados com auxílio de IA. Cada resumo está associado a uma impressão digital do texto oficial usado como base: se esse texto mudar, o resumo deixa de ser exibido até nova revisão. Não há geração de texto por IA em tempo de execução nem custo de API de IA. Ementas, textos integrais e fontes permanecem acessíveis.
+
+A leitura começa por **O que pode mudar**, logo abaixo do título. `reading.mjs` explica tipos de matéria, situações e alguns movimentos sem inferir aprovação ou vigência. O nome da situação e os registros originais permanecem acessíveis. O responsável pela etapa respeita encaminhamentos explícitos, como envio ao Senado, e não trata uma unidade administrativa como órgão de votação. As explicações sobre tramitação seguem a [orientação da Câmara](https://www.camara.leg.br/entenda-o-processo-legislativo/). Os 24 resumos editoriais não cobrem todo o catálogo: nas demais pautas, o site apresenta o texto oficial e orientações sobre a etapa.
 
 ## Rodar
 
