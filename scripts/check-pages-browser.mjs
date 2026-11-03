@@ -7,7 +7,8 @@ try{
   const page=await browser.newPage(),errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.setViewport({width:1366,height:900});
-  await page.goto(base);
+  // The static HTML appears before the public data index finishes loading.
+  await page.goto(base,{waitUntil:'networkidle0'});
   await page.waitForSelector('.pauta-grid .pauta-card');
   assert.match(await page.title(),/Entenda cada pauta/);
   await page.click('.topic-shortcuts a');
